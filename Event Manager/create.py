@@ -10,11 +10,10 @@ class create():
         self.root.geometry("800x600")
         self.email = email
 
-
         self.enterName = CTkEntry(master=self.root, placeholder_text="Event Name", width=240)
         self.enterName.pack(pady=10, padx=50)
 
-        self.enterDescription = CTkEntry(master=self.root, placeholder_text="Event Description", width=240)
+        self.enterDescription = CTkTextbox(master=self.root, width=600, scrollbar_button_color="white")
         self.enterDescription.pack(pady=10, padx=50)
 
         self.enterDate = CTkEntry(master=self.root, placeholder_text="Event Date", width=240)
@@ -24,13 +23,6 @@ class create():
         self.createBtn.pack(pady=10, padx=50)
 
 
-
-        
-
-
-
-
-
-        def run(self):
-            self.root.mainloop()
+    def run(self):
+        self.root.mainloop()
             

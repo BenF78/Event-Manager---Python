@@ -1,5 +1,6 @@
 from customtkinter import * #type: ignore
 import sqlite3
+from create import * #type: ignore
 
 class home:
     def __init__(self, email):
@@ -8,22 +9,19 @@ class home:
         self.root.title("Event Manager | Home")
         self.root.geometry("800x600")
 
-        self.greeting = CTkLabel(master=self.root, text=f"Hello {self.getAccountName()}")
-        self.greeting.pack(pady=10)
+        self.heading = CTkLabel(master=self.root, text="Home", font=("Arial", 36, "bold"))
+        self.heading.pack(pady=20)
 
-        self.heading = CTkLabel(master=self.root, text="Home", font=("Arial", 32))
-        self.heading.pack(pady=10)
+        self.selectLabel = CTkLabel(master=self.root, text=f"Hello {self.getAccountName()}, Select An Option From Below:", font=("Arial", 24))
+        self.selectLabel.pack(pady=20)
 
-        self.selectLabel = CTkLabel(master=self.root, text="Select An Option To Do From Below")
-        self.selectLabel.pack(pady=10)
-
-        self.createEventBtn = CTkButton(master=self.root, text="Create Event", corner_radius=32, hover_color="darkgreen", width=200, fg_color="green")
+        self.createEventBtn = CTkButton(master=self.root, text="Create Event", corner_radius=32, hover_color="darkgreen", width=250, height=40, fg_color="green", font=("Arial", 20, "bold"),command=lambda event=None: self.callCreateEventClass())
         self.createEventBtn.pack(pady=10)
 
-        self.viewEventsBtn = CTkButton(master=self.root, text="Create Event", corner_radius=32, hover_color="darkgreen", width=200, fg_color="green")
+        self.viewEventsBtn = CTkButton(master=self.root, text="Create Event", corner_radius=32, hover_color="darkgreen", width=250, height=40, fg_color="green", font=("Arial", 20, "bold"))
         self.viewEventsBtn.pack(pady=10)
 
-        self.viewProfileBtn = CTkButton(master=self.root, text="View Account Details", corner_radius=32, hover_color="darkgreen", width=200, fg_color="green")
+        self.viewProfileBtn = CTkButton(master=self.root, text="View Account Details", corner_radius=32, hover_color="darkgreen", width=250, height=40, fg_color="green", font=("Arial", 20, "bold"))
         self.viewProfileBtn.pack(pady=10)
     
     def getAccountName(self):
@@ -37,6 +35,11 @@ class home:
                 for l in t:
                     name = l
                     return name
+                
+    def callCreateEventClass(self):
+        self.root.withdraw()
+        app = create(self.email)
+        app.run()
 
 
         

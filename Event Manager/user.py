@@ -5,6 +5,7 @@ from tools import *
 import smtplib
 import random
 from home import *
+import socket
 
 class login:
     def __init__(self):
@@ -15,7 +16,8 @@ class login:
             c.execute("""CREATE TABLE IF NOT EXISTS users(
                         name TEXT,
                         email TEXT,
-                        password TEXT
+                        password TEXT,
+                        ip INTEGER
                     )
                 """)
 
@@ -50,12 +52,41 @@ class login:
         self.signUpLink.pack(pady=10)
         self.signUpLink.bind("<Button-1>", lambda event=None : self.callSignUpClass())
 
+        self.checkIfRememberMeIsEnabled()
+
     def enableRememberMe(self):
         # store ip in db
-        if self.rememberMeVar.get() == 0:
-            print("off")
+        if self.rememberMeVar.get() == 1:
+            self.hostName = socket.gethostname()
+            self.ipAddress = socket.gethostbyname(self.hostName)
+
+            with sqlite3.connect("database.db") as conn:
+                c = conn.cursor()
+
+                c.execute("UPDATE users SET ip=? WHERE email=?", (self.ipAddress, self.emailInput.get().strip()))
         else:
-            print("on")
+            return
+
+    def checkIfRememberMeIsEnabled(self):
+        self.hostName = socket.gethostname()
+        ipAddress = socket.gethostbyname(self.hostName)
+
+        with sqlite3.connect("database.db") as conn:
+            c = conn.cursor()
+
+            c.execute("SELECT * FROM users WHERE ip=?", (ipAddress,))
+            userIpInDb = c.fetchall()
+            
+            if userIpInDb:
+                for data in userIpInDb:
+                    data = list(data)
+                    email = data[1]
+                    
+                self.root.withdraw()
+                app = home(email)
+                app.run()
+            else:
+                return
 
     def loginToAccount(self):
         email = self.emailInput.get().strip()
@@ -243,7 +274,7 @@ class signUp:
         else:
             with sqlite3.connect("database.db") as conn:
                 c = conn.cursor()
-                c.execute("INSERT INTO users VALUES(?,?,?)", [name, email, password])
+                c.execute("INSERT INTO users VALUES(?,?,?,?)", [name, email, password,None])
             
             messagebox.showinfo(title="Account Created", message=f"Your account has been created {name}")
 
