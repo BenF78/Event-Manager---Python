@@ -18,7 +18,7 @@ class login:
                         password TEXT
                     )
                 """)
-
+#this is an addition
         self.root = CTk(fg_color="#242322")
         self.root.geometry("800x600")
         self.root.title("Event Manager | Login")
