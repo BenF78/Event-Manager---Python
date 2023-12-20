@@ -18,7 +18,7 @@ class login:
                         password TEXT
                     )
                 """)
-#this is an addition
+
         self.root = CTk(fg_color="#242322")
         self.root.geometry("800x600")
         self.root.title("Event Manager | Login")
@@ -67,7 +67,8 @@ class login:
             messagebox.showerror(title="Account not found", message="Your account has not been found.")
         else:
             messagebox.showinfo(title="Account Found", message=f"Your account has been found {self.getAccountName(email)}.")
-            app = home()
+            self.root.withdraw()
+            app = home(email)
             app.run()
 
     def getAccountName(self, email):
