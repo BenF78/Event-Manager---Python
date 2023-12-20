@@ -21,7 +21,7 @@ class create():
 
         self.createBtn = CTkButton(master=self.root, text="Create Event", fg_color="green", hover_color="darkgreen", corner_radius=32, command=self.storeDetailsInDb)
         self.createBtn.pack(pady=10, padx=50)
-
+    #testing
 
     def run(self):
         self.root.mainloop()
