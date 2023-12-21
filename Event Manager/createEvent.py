@@ -18,7 +18,8 @@ class create:
                         email TEXT,
                         name TEXT,
                         description TEXT,
-                        dueDate TEXT
+                        dueDate TEXT,
+                        completed BOOLEAN
                     )
                 """)        
             
@@ -72,7 +73,7 @@ class create:
                 with sqlite3.connect("database.db") as conn:
                     c = conn.cursor()
 
-                    c.execute("INSERT INTO events VALUES(?,?,?,?)", (self.email, eventName, eventDesc, eventDueDate))   
+                    c.execute("INSERT INTO events VALUES(?,?,?,?,?)", (self.email, eventName, eventDesc, eventDueDate, False))   
 
                 messagebox.showinfo(title="Event Created", message=f"{eventName} Event Has Been Created.")  
                 self.callHomeModule()

@@ -279,6 +279,10 @@ class signUp:
             
             messagebox.showinfo(title="Account Created", message=f"Your account has been created {name}")
 
+            self.root.withdraw()
+            app = home.home(email) 
+            app.run()
+
     def callLoginClass(self):   
         self.root.withdraw()
         main()

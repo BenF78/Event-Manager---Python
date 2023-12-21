@@ -100,6 +100,8 @@ class accountView:
                 c = conn.cursor()
                 # update details in the events table
                 c.execute("UPDATE users SET name=?,email=?,password=?", (name,email,password))
+                # self.email is the original email
+                c.execute("UPDATE events SET email=? WHERE email=?", (email, self.email))
 
                 messagebox.showinfo(title="Details Changed", message="Your Accont Details Have Been Changed")
                 

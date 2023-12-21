@@ -22,7 +22,7 @@ class viewEventList:
 
         # If no events are in the db show a label to tell the user they have no events
         if not allEvents:
-            self.noEventsLabel = CTkLabel(master=self.root, text="No Tasks Have Been Found", font=("Arial", 18), text_color="red")
+            self.noEventsLabel = CTkLabel(master=self.root, text="No Events Have Been Found", font=("Arial", 18), text_color="red")
             self.noEventsLabel.pack(pady=20)
         else:
             self.eventFrame = CTkScrollableFrame(master=self.root, orientation="vertical", scrollbar_button_color="white", width=500, height=400)
