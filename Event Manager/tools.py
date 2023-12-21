@@ -151,7 +151,7 @@ def get_all_user_events(email):
         with sqlite3.connect("database.db") as conn:
             c = conn.cursor()
 
-            c.execute("SELECT name,description,dueDate FROM events WHERE email=?", (email,))
+            c.execute("SELECT name,dueDate FROM events WHERE email=?", (email,))
 
             allEvents = c.fetchall()
 
@@ -187,3 +187,31 @@ def get_account_details(email):
         for details in accountDetails:
             print(list(details))
             return list(details)
+        
+def get_event_description(email, eventName):
+    import sqlite3
+
+    with sqlite3.connect("database.db") as conn:
+        c = conn.cursor()
+
+        c.execute("SELECT description FROM events WHERE email=? AND name=?", (email,eventName))
+        eventDesc = c.fetchall()
+        
+        for l in eventDesc:
+            for t in l:
+                eventDesc = t
+                return eventDesc
+            
+def get_event_due_date(email, eventName):
+    import sqlite3
+
+    with sqlite3.connect("database.db") as conn:
+        c = conn.cursor()
+
+        c.execute("SELECT dueDate FROM events WHERE email=? AND name=?", (email,eventName))
+        dueDate = c.fetchall()
+        
+        for l in dueDate:
+            for t in l:
+                eventDesc = t
+                return dueDate

@@ -11,13 +11,14 @@ class home:
         self.root.title("Event Manager | Home")
         self.root.geometry("1000x700")
 
+        # Create all home widgets
         self.heading = CTkLabel(master=self.root, text="Home", font=("Arial", 36, "bold"))
         self.heading.pack(pady=20)
 
         self.selectLabel = CTkLabel(master=self.root, text=f"Hello {self.getAccountName()}, Select An Option From Below:", font=("Arial", 24))
         self.selectLabel.pack(pady=20)
 
-        self.createEventBtn = CTkButton(master=self.root, text="Create Event", corner_radius=32, hover_color="darkgreen", width=250, height=40, fg_color="green", font=("Arial", 20, "bold"),command=lambda event=None: self.callCreateEventClass())
+        self.createEventBtn = CTkButton(master=self.root, text="Create Event", corner_radius=32, hover_color="darkgreen", width=250, height=40, fg_color="green", font=("Arial", 20, "bold"),command=lambda event=None: self.callCreateEventModule())
         self.createEventBtn.pack(pady=10)
 
         self.viewEventsBtn = CTkButton(master=self.root, text="View Events", corner_radius=32, hover_color="darkgreen", width=250, height=40, fg_color="green", font=("Arial", 20, "bold"), command=self.callViewEventModule)
@@ -29,6 +30,7 @@ class home:
         self.notificationLabel = CTkLabel(master=self.root, text="Your Notifications:", font=("Arial", 24, "bold"))
         self.notificationLabel.pack(pady=40)
 
+        # A scrollable frame to display notifications
         self.noficationFrame = CTkScrollableFrame(master=self.root, orientation="horizontal", scrollbar_button_color="black", width=800)
         self.noficationFrame.pack()
 
@@ -48,9 +50,9 @@ class home:
         self.testNotification.pack(pady=10, padx=10, side="left")
         self.testNotification = CTkButton(master=self.noficationFrame, text="Event due today", height=200)
         self.testNotification.pack(pady=10, padx=10, side="left")
-        
-        
 
+    # These 3 function creates an instance of the classes inside this module so they can be run from here when the user clicks the btn
+    # Pass in the email to the class so all details linked to that account can be found
     def callAccoutModule(self):
         self.root.withdraw()
         app = accountView.accountView(self.email)
@@ -59,6 +61,11 @@ class home:
     def callViewEventModule(self):
         self.root.withdraw()
         app = viewEventList.viewEventList(self.email)
+        app.run()
+
+    def callCreateEventModule(self):
+        self.root.withdraw()
+        app = createEvent.create(self.email)
         app.run()
         
     
@@ -74,10 +81,7 @@ class home:
                     name = l
                     return name
                 
-    def callCreateEventClass(self):
-        self.root.withdraw()
-        app = createEvent.create(self.email)
-        app.run()
+    
 
     def run(self):
         self.root.mainloop()

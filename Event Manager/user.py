@@ -100,7 +100,7 @@ class login:
         else:
             messagebox.showinfo(title="Account Found", message=f"Your account has been found {self.getAccountName(email)}.")
             self.root.withdraw()
-            app = home(email)
+            app = home.home(email)
             app.run()
 
     def getAccountName(self, email):
