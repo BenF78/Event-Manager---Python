@@ -129,4 +129,61 @@ def find_password_in_db(email, password):
         for t in l:
             password = t
             return password
+        
+def event_name_exists(email, eventName):
+    import sqlite3
+    
+    with sqlite3.connect("database.db") as conn:
+        c = conn.cursor()
 
+        c.execute("SELECT * FROM events WHERE email=? AND name=?", (email, eventName))
+        eventInDb = c.fetchall()
+
+    if eventInDb:
+        return True
+    else:
+        return False
+    
+def get_all_user_events(email):
+    import sqlite3
+
+    try:
+        with sqlite3.connect("database.db") as conn:
+            c = conn.cursor()
+
+            c.execute("SELECT name,description,dueDate FROM events WHERE email=?", (email,))
+
+            allEvents = c.fetchall()
+
+            return allEvents
+    except sqlite3.OperationalError:
+        return False
+    
+
+def get_email(email):
+    import sqlite3
+
+    with sqlite3.connect("database.db") as conn:
+        c = conn.cursor()
+
+        c.execute("SELECT email FROM users WHERE email=?", (email,))
+        email = c.fetchall()
+
+        for l in email:
+            for t in l:
+                email = t
+                return email
+            
+def get_account_details(email):
+    import sqlite3
+
+    with sqlite3.connect("database.db") as conn:
+        c = conn.cursor()
+
+        c.execute("SELECT name,email,password FROM users WHERE email=?", (email,))
+
+        accountDetails = c.fetchall()
+
+        for details in accountDetails:
+            print(list(details))
+            return list(details)

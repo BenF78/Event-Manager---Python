@@ -4,7 +4,7 @@ import sqlite3
 from tools import * 
 import smtplib
 import random
-from home import *
+import home
 import socket
 
 class login:
@@ -22,7 +22,7 @@ class login:
                 """)
 
         self.root = CTk(fg_color="#242322")
-        self.root.geometry("800x600")
+        self.root.geometry("1000x700")
         self.root.title("Event Manager | Login")
 
         self.frame = CTkFrame(master=self.root)
@@ -65,6 +65,7 @@ class login:
 
                 c.execute("UPDATE users SET ip=? WHERE email=?", (self.ipAddress, self.emailInput.get().strip()))
         else:
+            # Should never run
             return
 
     def checkIfRememberMeIsEnabled(self):
@@ -83,7 +84,7 @@ class login:
                     email = data[1]
                     
                 self.root.withdraw()
-                app = home(email)
+                app = home.home(email)
                 app.run()
             else:
                 return
@@ -130,7 +131,7 @@ class login:
 class resetPassword:
     def __init__(self):
         self.root = CTk(fg_color="#242322")
-        self.root.geometry("800x600")
+        self.root.geometry("800x700")
         self.root.title("Event Manager | Reset Password")
 
         self.frame = CTkFrame(master=self.root)
@@ -226,7 +227,7 @@ class resetPassword:
 class signUp:
     def __init__(self):
         self.root = CTk(fg_color="#242322")
-        self.root.geometry("800x600")
+        self.root.geometry("800x700")
         self.root.title("Event Manager | Sign Up")
         
         self.frame = CTkFrame(master=self.root)
