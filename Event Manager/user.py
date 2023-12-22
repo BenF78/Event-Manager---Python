@@ -22,7 +22,7 @@ class login:
                 """)
 
         self.root = CTk(fg_color="#242322")
-        self.root.geometry("1000x700")
+        self.root.geometry("1200x700")
         self.root.title("Event Manager | Login")
 
         self.frame = CTkFrame(master=self.root)

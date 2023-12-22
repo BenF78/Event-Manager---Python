@@ -213,5 +213,29 @@ def get_event_due_date(email, eventName):
         
         for l in dueDate:
             for t in l:
-                eventDesc = t
+                dueDate = t
                 return dueDate
+            
+
+def get_account_name(email):
+        import sqlite3
+
+        with sqlite3.connect("database.db") as conn:
+            c = conn.cursor()
+
+            c.execute("SELECT name FROM users WHERE email=?", (email,))
+            name = c.fetchall()
+
+            for t in name:
+                for l in t:
+                    name = l
+                    return str(name).capitalize()
+
+def sign_out(email):
+    import sqlite3
+
+    with sqlite3.connect("database.db") as conn:
+        c = conn.cursor()
+
+        c.execute("UPDATE users SET ip=? WHERE email=?", (None,email))
+
