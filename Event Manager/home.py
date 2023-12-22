@@ -12,7 +12,7 @@ class home:
         self.email = email
         self.root = CTk()
         self.root.title("Event Manager | Home")
-        self.root.geometry("1200x700")
+        self.root.geometry("1200x800")
 
         # Create a left frame
         self.leftFrame = CTkFrame(master=self.root, height=600, width=300)
@@ -81,4 +81,5 @@ class home:
         app.run()
 
     def run(self):
+        # self.root.attributes("-fullscreen", True)
         self.root.mainloop()

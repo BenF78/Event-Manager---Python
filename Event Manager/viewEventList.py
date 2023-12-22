@@ -7,21 +7,28 @@ import viewEvent
 import accountView
 import createEvent
 import user
-import viewEventList
 from tkinter import messagebox
+import viewEventList
 
 class viewEventList:
     def __init__(self, email):
         self.email = email
         self.root = CTk()
         self.root.title("Event Manager | View Events")
-        self.root.geometry("1200x700")
+        self.root.geometry("1200x800")
+        self.orderByQuery = "ORDER BY rowid DESC"
 
+        self.displayEvents()
+
+    def displayEvents(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        
         # Create a left frame
         self.leftFrame = CTkFrame(master=self.root, height=600, width=300)
         self.leftFrame.pack(side="left", fill="y")  # Use fill="y" to make the frame expand vertically
 
-        self.navHeading = CTkLabel(master=self.leftFrame, text=f"Logged In As {get_account_name(email)}", font=("Arial", 22, "bold"))
+        self.navHeading = CTkLabel(master=self.leftFrame, text=f"Logged In As {get_account_name(self.email)}", font=("Arial", 22, "bold"))
         self.navHeading.pack(side="top", pady=20)
 
         self.navHomeBtn = CTkLabel(master=self.leftFrame, text="      Home", compound="left", font=("Arial", 18, "bold"), width=300, height=60, anchor="w")
@@ -54,10 +61,13 @@ class viewEventList:
         self.heading = CTkLabel(master=self.root, text="All Your Events With The Due Dates Are Listed Below: ", font=("Arial", 32, "bold"))
         self.heading.pack(pady=20)
 
-        self.label = CTkLabel(master=self.root, text="Simply Click On The Button To View The Task", font=("Arial", 18))
+        self.label = CTkLabel(master=self.root, text="Order By:", font=("Arial", 18))
         self.label.pack(pady=10)
 
-        allEvents = get_all_user_events(email)
+        self.orderEventsBtn = CTkComboBox(master=self.root, values=["Most Recent (Default)", "Due Date", "Past Due First", "Not Due Yet First" , "Completed First", "Name"], command=self.orderEvents)
+        self.orderEventsBtn.pack(pady=10)
+
+        allEvents = get_all_user_events(self.email, self.orderByQuery)
 
         # If no events are in the db show a label to tell the user they have no events
         if not allEvents:
@@ -65,33 +75,46 @@ class viewEventList:
             self.noEventsLabel.pack(pady=20)
         else:
             self.eventFrame = CTkScrollableFrame(master=self.root, orientation="vertical", scrollbar_button_color="white", width=500, height=400)
-            self.eventFrame.pack(expand=True)
+            self.eventFrame.pack(pady=40)
 
-            currentDate = datetime.now().date()
-            currentDate = datetime.now().strftime("%Y/%m/%d").replace("/", "")
-            currentDate = int(currentDate)
+            currentDate = int(datetime.now().date().strftime("%Y/%m/%d").replace("/", ""))
 
             for data in allEvents:
                 eventName, dueDate = data
 
-                # Convert to string to replace the dashes with slashes
-                formattedDueDate = str(dueDate).replace("-", "/")
-
                 viewTaskBtn = CTkButton(master=self.eventFrame, width=400, height=30, font=("Arial", 18, "bold"), command=lambda n=eventName : self.callViewEventModule(n))
                 viewTaskBtn.pack(pady=20)
 
-                dueDate = formattedDueDate.replace("/", "")
-                dueDate = int(dueDate)
+                dueDateObject = datetime.strptime(dueDate, "%d/%m/%Y")
+                intDueDate = int(dueDateObject.strftime("%Y%m%d"))
                 
                 # larger number = future
                 # smaller number = past
 
-                if dueDate > currentDate:
-                    viewTaskBtn.configure(fg_color="green", hover_color="darkgreen", text=f"{eventName}\n\n{formattedDueDate} (Not Due Yet)")
-                elif dueDate < currentDate:
-                    viewTaskBtn.configure(fg_color="red", hover_color="#9e1919", text=f"{eventName}\n\n{formattedDueDate} (Past Due)")
-                elif dueDate == currentDate:
-                    viewTaskBtn.configure(fg_color="orange", hover_color="#c2810a", text=f"{eventName}\n\n{formattedDueDate} (Due Today)")
+                if intDueDate > currentDate and not event_is_completed(self.email, eventName):
+                    viewTaskBtn.configure(fg_color="green", hover_color="darkgreen", text=f"{eventName}\n\n{dueDate} (Not Due Yet)")
+                elif intDueDate < currentDate and not event_is_completed(self.email, eventName):
+                    viewTaskBtn.configure(fg_color="red", hover_color="#9e1919", text=f"{eventName}\n\n{dueDate} (Past Due)")
+                elif intDueDate == currentDate and not event_is_completed(self.email, eventName):
+                    viewTaskBtn.configure(fg_color="orange", hover_color="#c2810a", text=f"{eventName}\n\n{dueDate} (Due Today)")
+                elif event_is_completed(self.email, eventName):
+                    viewTaskBtn.configure(hover_color="blue", text=f"{eventName}\n\n{dueDate} (Completed)")
+
+    def orderEvents(self, value):
+        if value == "Name":
+            self.orderByQuery = "ORDER BY name"
+        elif value == "Due Date":
+            self.orderByQuery = "ORDER BY intDueDate"
+        elif value == "Past Due First":
+            self.orderByQuery = "ORDER BY intDueDate ASC"
+        elif value == "Not Due Yet First":
+            self.orderByQuery = "ORDER BY intDueDate DESC"
+        elif value == "Completed First":
+            self.orderByQuery = "ORDER BY completed DESC"
+        else:
+            self.orderByQuery = "ORDER BY rowid DESC"   # Descending as most recent events are at the bottom of the table
+
+        self.displayEvents()
 
     def callViewEventModule(self, eventName):
         self.root.withdraw()
@@ -119,9 +142,6 @@ class viewEventList:
         app = user.login()
         app.run()
 
-    
-
-
-
     def run(self):
+        # self.root.attributes("-fullscreen", True)
         self.root.mainloop()

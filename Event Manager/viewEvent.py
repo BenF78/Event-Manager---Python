@@ -17,7 +17,7 @@ class viewEvent:
         self.clickedEventName = clickedEventName
 
         self.root = CTk()
-        self.root.geometry("1200x700")
+        self.root.geometry("1200x800")
         self.root.title("Event Manager | View Event")
 
         # Create a left frame
@@ -102,10 +102,12 @@ class viewEvent:
                 messagebox.showerror(title="Invalid Date Format", message="Please enter a valid date format.")
             else:
                 # If everything is valid insert the event details into the table with the logged in email as key
+                eventDueDate = eventDueDate.strftime("%d/%m/%Y")
+                intDueDate = int(eventDueDate.replace("/", ""))
                 with sqlite3.connect("database.db") as conn:
                     c = conn.cursor()
 
-                    c.execute("UPDATE events SET name=?,description=?,dueDate=? WHERE email=? AND name=?", (eventName, eventDesc, eventDueDate, self.email, self.clickedEventName))   
+                    c.execute("UPDATE events SET name=?,description=?,dueDate=?,intDueDate=? WHERE email=? AND name=?", (eventName, eventDesc, eventDueDate, intDueDate ,self.email, self.clickedEventName))   
 
                 messagebox.showinfo(title="Event Updated", message=f"{eventName} Event Has Been Updated.")  
                 self.callHomeModule()
@@ -155,7 +157,6 @@ class viewEvent:
         app = user.login()
         app.run()
 
-        
-
     def run(self):
+        # self.root.attributes("-fullscreen", True)
         self.root.mainloop()

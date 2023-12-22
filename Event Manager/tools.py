@@ -144,14 +144,14 @@ def event_name_exists(email, eventName):
     else:
         return False
     
-def get_all_user_events(email):
+def get_all_user_events(email, order_by_query):
     import sqlite3
 
     try:
         with sqlite3.connect("database.db") as conn:
             c = conn.cursor()
 
-            c.execute("SELECT name,dueDate FROM events WHERE email=?", (email,))
+            c.execute(f"SELECT name,dueDate FROM events WHERE email=? {order_by_query}", (email,))
 
             allEvents = c.fetchall()
 
@@ -238,4 +238,21 @@ def sign_out(email):
         c = conn.cursor()
 
         c.execute("UPDATE users SET ip=? WHERE email=?", (None,email))
+
+def event_is_completed(email, name):
+    import sqlite3
+
+    with sqlite3.connect("database.db") as conn:
+        c = conn.cursor()
+
+        c.execute("SELECT completed FROM events WHERE email=? AND name=?", (email, name))
+        completed = c.fetchall()
+
+        for l in completed:
+            for t in l:
+                if int(t) == 1:
+                    return True
+                else:
+                    return False
+
 

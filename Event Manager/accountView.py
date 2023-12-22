@@ -14,7 +14,7 @@ class accountView:
         self.email = email
         self.root = CTk()
         self.root.title("Event Manager | View Account")
-        self.root.geometry("1200x700") 
+        self.root.geometry("1200x800") 
 
         # Create a left frame
         self.leftFrame = CTkFrame(master=self.root, height=600, width=300)
@@ -75,11 +75,6 @@ class accountView:
 
         self.saveChangesBtn = CTkButton(master=self.root, text="Save Changes", fg_color="green", hover_color="darkgreen", corner_radius=20, font=("Arial", 18), width=150, height=30,command=self.updateDetails)
         self.saveChangesBtn.pack(pady=10)
-
-        self.goBackToHomeBtn = CTkLabel(master=self.root, text="Back To Home", font=("Arial", 16))
-        self.goBackToHomeBtn.bind("<Button-1>", lambda event=None : self.callHomeModule())
-        self.goBackToHomeBtn.pack(pady=10)
-
 
     def getAccountName(self):
         with sqlite3.connect("database.db") as conn:
@@ -171,4 +166,5 @@ class accountView:
         app.run()
 
     def run(self):
+        # self.root.attributes("-fullscreen", True)
         self.root.mainloop()

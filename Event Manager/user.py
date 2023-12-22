@@ -22,7 +22,7 @@ class login:
                 """)
 
         self.root = CTk(fg_color="#242322")
-        self.root.geometry("1200x700")
+        self.root.geometry("1200x800")
         self.root.title("Event Manager | Login")
 
         self.frame = CTkFrame(master=self.root)
@@ -126,12 +126,13 @@ class login:
         resetPasswordApp.run()
 
     def run(self):
+        self.root.attributes("-fullscreen", True)
         self.root.mainloop()
 
 class resetPassword:
     def __init__(self):
         self.root = CTk(fg_color="#242322")
-        self.root.geometry("800x700")
+        self.root.geometry("1200x700")
         self.root.title("Event Manager | Reset Password")
 
         self.frame = CTkFrame(master=self.root)
@@ -222,12 +223,13 @@ class resetPassword:
         main()
 
     def run(self):
+        self.root.attributes("-fullscreen", True)
         self.root.mainloop()
 
 class signUp:
     def __init__(self):
         self.root = CTk(fg_color="#242322")
-        self.root.geometry("800x700")
+        self.root.geometry("1200x700")
         self.root.title("Event Manager | Sign Up")
         
         self.frame = CTkFrame(master=self.root)
@@ -288,6 +290,7 @@ class signUp:
         main()
 
     def run(self):
+        # self.root.attributes("-fullscreen", True)
         self.root.mainloop()
 
 def main():

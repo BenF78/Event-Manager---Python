@@ -13,16 +13,18 @@ class create:
     def __init__(self, email):
         self.root = CTk()
         self.root.title("Event Manager | Create")
-        self.root.geometry("1200x700")
+        self.root.geometry("1200x800")
         self.email = email
 
         with sqlite3.connect("database.db") as conn:
             c = conn.cursor()
+            # Integar due date to order the due date numerically
             c.execute("""CREATE TABLE IF NOT EXISTS events(
                         email TEXT,
                         name TEXT,
                         description TEXT,
                         dueDate TEXT,
+                        intDueDate INTEGAR, 
                         completed BOOLEAN
                     )
                 """)        
@@ -82,11 +84,6 @@ class create:
         self.createEventBtn = CTkButton(master=self.root, text="Create Event", fg_color="green", hover_color="darkgreen", command=self.createEvent)
         self.createEventBtn.pack(pady=10)
 
-        self.goBackToHomeBtn = CTkLabel(master=self.root, text="Back To Home", font=("Arial", 16))
-        # Bind the label to a button so a command can be run when it is clicked
-        self.goBackToHomeBtn.bind("<Button-1>", lambda event=None : self.callHomeModule())
-        self.goBackToHomeBtn.pack(pady=10)
-
     def createEvent(self):
         # get the event info and remove white space
         eventName = self.eventNameInput.get().strip()
@@ -108,13 +105,15 @@ class create:
                 messagebox.showerror(title="Invalid Date Format", message="Please enter a valid date format.")
             else:
                 # If everything is valid insert the event details into the table with the logged in email as key
+                eventDueDate = eventDueDate.strftime("%d/%m/%Y")
+                intDueDate = int(eventDueDate.replace("/", ""))
                 with sqlite3.connect("database.db") as conn:
                     c = conn.cursor()
 
-                    c.execute("INSERT INTO events VALUES(?,?,?,?,?)", (self.email, eventName, eventDesc, eventDueDate, False))   
+                    c.execute("INSERT INTO events VALUES(?,?,?,?,?,?)", (self.email, eventName, eventDesc, eventDueDate, intDueDate, False))   
 
                 messagebox.showinfo(title="Event Created", message=f"{eventName} Event Has Been Created.")  
-                self.callHomeModule()
+                self.callViewEventModule()
 
     def callHomeModule(self):
         # Withdraw the root and return to the home page when the btn clicked or an event is made
@@ -144,5 +143,6 @@ class create:
         app.run()
 
     def run(self):
+        # self.root.attributes("-fullscreen", True)
         self.root.mainloop()
             
